@@ -2,7 +2,7 @@
   <div>
     <div class="row">
       <div class="col-md-12">
-        <table class="table table-striped" v-if="users.length > 0">
+        <table class="table table-striped" v-if="employees.length > 0">
           <thead>
             <tr>
               <th>Name</th>
@@ -12,18 +12,18 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="user in users" :key="user.key">
-              <td>{{ user.name }}</td>
-              <td>{{ user.email }}</td>
-              <td>{{ user.contact }}</td>
+            <tr v-for="(employee,idx) in employees" :key="idx">
+              <td>{{ employee.name }}</td>
+              <td>{{ employee.email }}</td>
+              <td>{{ employee.contact }}</td>
               <td>
                 <router-link
-                  :to="{ name: 'Edit', params: { id: user.key } }"
+                  :to="{ name: 'Edit', params: { id: employee.id } }"
                   class="btn btn-primary mr-1"
                   >Edit
                 </router-link>
                 <button
-                  @click.prevent="deleteUser(user.key)"
+                  @click.prevent="deleteUser(employee.id)"
                   class="btn btn-danger"
                 >
                   Delete
@@ -46,21 +46,13 @@ export default {
   name: "EmployeeList",
   data: function () {
     return {
-      users: [],
+      employees: [],
     };
   },
-  created() {
-    db.collection("employees").onSnapshot((snapshotChange) => {
-      this.users = [];
-      snapshotChange.forEach((doc) => {
-        this.users.push({
-          key: doc.id,
-          name: doc.data().name,
-          email: doc.data().email,
-          contact: doc.data().contact,
-        });
-      });
-    });
+  firestore(){
+    return {
+      employees: db.collection('employees')
+    }
   },
   methods: {
     deleteUser(id) {

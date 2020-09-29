@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     onFormSubmit: function () {
-        db.collection('employees').add(this.user)
+        db.collection('employees').add(this.employee)
         .then(() => {
             alert('Employee added successfully');
             this.employee.name = ''
